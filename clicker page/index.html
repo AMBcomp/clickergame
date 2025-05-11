@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>بازی کلیکی من</title>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+      margin-top: 50px;
+    }
+    button {
+      font-size: 24px;
+      padding: 10px 30px;
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>بازی کلیکی</h1>
+  <p id="score">امتیاز: 0</p>
+  <button onclick="clickMe()">کلیک کن!</button>
+
+  <script>
+    let score = 0;
+
+    function clickMe() {
+      score++;
+      document.getElementById("score").innerText = "امتیاز: " + score;
+    }
+  </script>
+</body>
+</html>
