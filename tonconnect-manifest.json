@@ -1,0 +1,10 @@
+
+{
+  "manifest_version": "0.1.0",
+  "name": "Clicker Game",
+  "description": "A simple clicker game connected to TON",
+  "url": "https://clickergame-eta.vercel.app/",
+  "iconUrl": "https://arshidaonlineshop.ir/uploads/1abe147023f74f6484af5bb1c7183bec.jpg",
+  "termsOfUseUrl": "https://your-vercel-url.vercel.app",
+  "privacyPolicyUrl": "https://your-vercel-url.vercel.app"
+}
