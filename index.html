@@ -2,146 +2,107 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8" />
-  <title>کلیک کن قراره پولدار شی کله سیاه خاورمیانه ای</title>
+  <title>بازی کلیکی با کیف پول TON</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="ton-connect-manifest" content="https://clickergame-eta.vercel.app/tonconnect-manifest.json" />
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
 
     * {
       box-sizing: border-box;
-      padding: 0;
       margin: 0;
+      padding: 0;
     }
 
     body {
       font-family: 'Vazirmatn', sans-serif;
-      background: linear-gradient(to top right, #3f51b5, #1de9b6);
-      color: #fff;
+      background-color: #fefefe;
+      color: #333;
       text-align: center;
-      padding: 50px 20px;
-      background-size: cover;
-      min-height: 100vh;
+      padding: 40px 20px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     h1 {
-      font-size: 36px;
+      font-size: 26px;
       margin-bottom: 20px;
-      text-shadow: 1px 1px 3px #000;
     }
 
-    #wallet-address {
-      margin: 10px 0;
-      font-size: 16px;
-    }
-
-    #connect-button, #click-button {
-      padding: 15px 30px;
-      font-size: 18px;
-      border: none;
-      border-radius: 12px;
-      margin: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-weight: bold;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-
-    #connect-button {
-      background-color: #ff9800;
-      color: #fff;
-    }
-
+    #connect-button,
     #click-button {
-      background-color: #4caf50;
-      color: #fff;
+      padding: 12px 24px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background-color: white;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
     }
 
+    #connect-button:hover,
     #click-button:hover {
-      transform: scale(1.05);
-      background-color: #66bb6a;
+      background-color: #f0f0f0;
     }
 
     #score {
-      font-size: 48px;
-      margin-top: 30px;
+      font-size: 36px;
+      margin-top: 20px;
       font-weight: bold;
-      color: #fff;
-      text-shadow: 2px 2px 4px #000;
-    }
-
-    .coin {
-      width: 60px;
-      height: 60px;
-      margin: 20px auto;
-      background-image: url('https://cdn-icons-png.flaticon.com/512/138/138292.png');
-      background-size: contain;
-      background-repeat: no-repeat;
-      animation: bounce 1s infinite;
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
     }
 
     footer {
-      margin-top: 50px;
-      font-size: 14px;
-      opacity: 0.8;
+      margin-top: 40px;
+      font-size: 12px;
+      color: #aaa;
     }
   </style>
 </head>
 <body>
 
-  <h1>کلیک کن قراره پولدار شی کله سیاه خاورمیانه ای</h1>
+  <h1>کلیک کن پولدار شی کله سیاه خاورمیانه ای</h1>
 
-  <button id="connect-button">🔗 اتصال به کیف پول</button>
-  <div id="wallet-address">کیف پول هنوز متصل نیست</div>
-
-  <div class="coin"></div>
-
-  <button id="click-button" disabled>کلیک کن و امتیاز بگیر!</button>
+  <button id="connect-button">اتصال به کیف پول</button>
+  <button id="click-button" disabled>کلیک کن</button>
   <div id="score">۰</div>
 
-  <footer>ساخته‌شده با ❤️(برای نمره 20) روی شبکه TON</footer>
+  <footer>نسخه اولیه – بدون ذخیره‌سازی</footer>
 
-  <script src="https://unpkg.com/@tonconnect/sdk@0.0.39"></script>
+  <script src="https://unpkg.com/@tonconnect/sdk@latest"></script>
   <script>
     const connectButton = document.getElementById("connect-button");
-    const walletAddressDiv = document.getElementById("wallet-address");
     const clickButton = document.getElementById("click-button");
     const scoreDiv = document.getElementById("score");
+    let score = 0;
 
-    let score = parseInt(localStorage.getItem("score")) || 0;
-    scoreDiv.textContent = score;
+    // ایجاد اتصال TonConnect
+    const connector = new TonConnect();
 
-    let tonConnect = null;
-
-    async function connectWallet() {
-      try {
-        tonConnect = new TON_CONNECT.TonConnect({
-          manifestUrl: "https://clickergame-eta.vercel.app/tonconnect-manifest.json"
-        });
-
-        const connectedWallet = await tonConnect.connectWallet();
-
-        if (connectedWallet && connectedWallet.account) {
-          walletAddressDiv.textContent = "آدرس: " + connectedWallet.account.address;
-          clickButton.disabled = false;
-        } else {
-          walletAddressDiv.textContent = "❌ خطا در اتصال";
-        }
-      } catch (error) {
-        console.error("اتصال با خطا مواجه شد:", error);
-        walletAddressDiv.textContent = "❌ اتصال برقرار نشد";
-      }
+    // اگر قبلاً وصل شده بود، بازی رو فعال کن
+    if (connector.connected) {
+      clickButton.disabled = false;
+      connectButton.textContent = "وصل شده ✅";
     }
 
-    connectButton.addEventListener("click", connectWallet);
+    connectButton.addEventListener("click", async () => {
+      try {
+        await connector.connect();
+        if (connector.connected) {
+          clickButton.disabled = false;
+          connectButton.textContent = "وصل شده ✅";
+        }
+      } catch (error) {
+        alert("خطا در اتصال به کیف پول");
+        console.error(error);
+      }
+    });
 
     clickButton.addEventListener("click", () => {
       score++;
-      localStorage.setItem("score", score);
       scoreDiv.textContent = score;
     });
   </script>
