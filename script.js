@@ -1,13 +1,21 @@
-const SUPABASE_URL = "https://covylkvckkgzomoukfcf.supabase.co"; // 
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNvdnlsa3Zja2tnem9tb3VrZmNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1OTA1ODQsImV4cCI6MjA2MzE2NjU4NH0.QPtnmWaLA-mMqOi2s2ZFT9BLGdYg2Qsoa9sHMhPWT8A"; //
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+import { TonConnect } from "https://unpkg.com/@tonconnect/sdk?module";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+const SUPABASE_URL = "https://covylkvckkgzomoukfcf.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNvdnlsa3Zja2tnem9tb3VrZmNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1OTA1ODQsImV4cCI6MjA2MzE2NjU4NH0.QPtnmWaLA-mMqOi2s2ZFT9BLGdYg2Qsoa9sHMhPWT8A";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const tonConnect = new TonConnect();
 
 let score = 0;
 let address = null;
 
 document.getElementById("connect-wallet").addEventListener("click", async () => {
-  await tonConnect.connect();
+  try {
+    await tonConnect.connect();
+  } catch (e) {
+    console.error("Error connecting wallet:", e);
+  }
 });
 
 tonConnect.onStatusChange(async (walletInfo) => {
@@ -22,7 +30,7 @@ tonConnect.onStatusChange(async (walletInfo) => {
 });
 
 async function saveUser(address) {
-  const { data, error } = await client
+  const { data, error } = await supabase
     .from('users')
     .upsert({ wallet: address }, { onConflict: ['wallet'] });
 
@@ -30,7 +38,7 @@ async function saveUser(address) {
 }
 
 async function loadUserScore(address) {
-  const { data, error } = await client
+  const { data, error } = await supabase
     .from('users')
     .select('score')
     .eq('wallet', address)
@@ -42,14 +50,14 @@ async function loadUserScore(address) {
   }
 }
 
-async function updateScore(address, score) {
-  const { data, error } = await client
+async function updateScore(address, newScore) {
+  const { data, error } = await supabase
     .from('users')
-    .update({ score: score })
+    .update({ score: newScore })
     .eq('wallet', address);
 
   if (error) {
-    console.error("خطا در آپدیت امتیاز:", error);
+    console.error("Error updating score:", error);
   }
 }
 
