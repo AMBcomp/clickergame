@@ -1,110 +1,86 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8" />
-  <title>بازی کلیکی با کیف پول TON</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="ton-connect-manifest" content="https://clickergame-eta.vercel.app/tonconnect-manifest.json" />
-
+  <meta charset="UTF-8">
+  <title>بازی کلیکی با TON</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/@tonconnect/sdk@latest"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
-      font-family: 'Vazirmatn', sans-serif;
-      background-color: #fefefe;
-      color: #333;
+      font-family: sans-serif;
       text-align: center;
-      padding: 40px 20px;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      background-color: #f2f2f2;
+      padding: 40px;
     }
-
     h1 {
-      font-size: 26px;
-      margin-bottom: 20px;
+      color: #333;
     }
-
-    #connect-button,
-    #click-button {
-      padding: 12px 24px;
-      margin: 10px;
-      font-size: 16px;
+    button {
+      padding: 14px 28px;
+      font-size: 18px;
+      margin: 15px;
       border-radius: 8px;
-      border: 1px solid #ccc;
-      background-color: white;
+      border: none;
+      background-color: #2b92ff;
+      color: white;
       cursor: pointer;
-      transition: background-color 0.2s ease;
+      transition: background-color 0.3s ease;
     }
-
-    #connect-button:hover,
-    #click-button:hover {
-      background-color: #f0f0f0;
+    button:hover {
+      background-color: #166fcd;
     }
-
     #score {
-      font-size: 36px;
-      margin-top: 20px;
-      font-weight: bold;
+      font-size: 24px;
+      margin-top: 10px;
+      color: #000;
     }
-
-    footer {
-      margin-top: 40px;
-      font-size: 12px;
-      color: #aaa;
+    #wallet-info {
+      margin-top: 30px;
+      font-size: 18px;
     }
   </style>
 </head>
 <body>
+  <h1>
+     کلیک کن که قراره پولدار شی کله سیاه خاورمیانه ای</h1>
+  <button id="click-btn">کلیک کن!</button>
+  <p>امتیاز شما: <span id="score">0</span></p>
 
-  <h1>کلیک کن پولدار شی کله سیاه خاورمیانه ای</h1>
+  <hr style="margin: 40px 0;">
 
-  <button id="connect-button">اتصال به کیف پول</button>
-  <button id="click-button" disabled>کلیک کن</button>
-  <div id="score">۰</div>
+  <button onclick="connectWallet()">🔗 اتصال به کیف پول TON</button>
 
-  <footer>نسخه اولیه – بدون ذخیره‌سازی</footer>
+  <div id="wallet-info">
+    <p><strong>آدرس کیف پول:</strong> <span id="wallet-address">--</span></p>
+  </div>
 
-  <script src="https://unpkg.com/@tonconnect/sdk@latest"></script>
   <script>
-    const connectButton = document.getElementById("connect-button");
-    const clickButton = document.getElementById("click-button");
-    const scoreDiv = document.getElementById("score");
     let score = 0;
+    const scoreEl = document.getElementById("score");
+    const addressEl = document.getElementById("wallet-address");
 
-    // ایجاد اتصال TonConnect
-    const connector = new TonConnect();
+    document.getElementById("click-btn").addEventListener("click", () => {
+      score++;
+      scoreEl.textContent = score;
+    });
 
-    // اگر قبلاً وصل شده بود، بازی رو فعال کن
-    if (connector.connected) {
-      clickButton.disabled = false;
-      connectButton.textContent = "وصل شده ✅";
-    }
+    const tonConnect = new TON_CONNECT.TonConnect({
+      manifestUrl: "https://clickergame-eta.vercel.app/tonconnect-manifest.json"
 
-    connectButton.addEventListener("click", async () => {
+    });
+
+    async function connectWallet() {
       try {
-        await connector.connect();
-        if (connector.connected) {
-          clickButton.disabled = false;
-          connectButton.textContent = "وصل شده ✅";
-        }
+        await tonConnect.connectWallet();
+        const wallet = tonConnect.wallet;
+        const address = wallet.account.address;
+        addressEl.textContent = address;
+        alert("✅ اتصال موفق! آدرس: " + address);
       } catch (error) {
-        alert("خطا در اتصال به کیف پول");
+        alert("❌ خطا در اتصال به کیف پول");
         console.error(error);
       }
-    });
-
-    clickButton.addEventListener("click", () => {
-      score++;
-      scoreDiv.textContent = score;
-    });
+    }
   </script>
 </body>
 </html>
