@@ -1,3 +1,4 @@
+// script.js
 import { TonConnect } from "https://unpkg.com/@tonconnect/sdk?module";
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
@@ -50,10 +51,10 @@ async function loadUserScore(address) {
   }
 }
 
-async function updateScore(address, newScore) {
+async function updateScore(address, score) {
   const { data, error } = await supabase
     .from('users')
-    .update({ score: newScore })
+    .update({ score: score })
     .eq('wallet', address);
 
   if (error) {
