@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
+<meta name="ton-connect-manifest" content="https://clickergame-eta.vercel.app/tonconnect-manifest.json" />
+
   <meta charset="UTF-8">
   <title>بازی کلیکی با TON</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,7 +55,7 @@
   <div id="wallet-info">
     <p><strong>آدرس کیف پول:</strong> <span id="wallet-address">--</span></p>
   </div>
-
+<script src="https://unpkg.com/@tonconnect/sdk@latest"></script>
   <script>
     let score = 0;
     const scoreEl = document.getElementById("score");
