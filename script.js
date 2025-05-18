@@ -1,6 +1,5 @@
-const SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co"; // ← جایگزین کن
-const SUPABASE_KEY = "YOUR_ANON_KEY"; // ← جایگزین کن
-
+const SUPABASE_URL = "https://covylkvckkgzomoukfcf.supabase.co"; // 
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNvdnlsa3Zja2tnem9tb3VrZmNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1OTA1ODQsImV4cCI6MjA2MzE2NjU4NH0.QPtnmWaLA-mMqOi2s2ZFT9BLGdYg2Qsoa9sHMhPWT8A"; //
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const tonConnect = new TonConnect();
 
